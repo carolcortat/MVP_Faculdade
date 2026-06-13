@@ -55,6 +55,7 @@
 
         container.innerHTML = eventos.map(evento => `
           <div class="card-evento">
+            ${evento.imagem_url ? `<img src="${evento.imagem_url}" alt="${evento.nome}" onerror="this.style.display='none'">` : ''}
             <h3>${evento.nome}</h3>
             ${evento.data ? `<p><strong>Data:</strong> ${formatarData(evento.data)}</p>` : ''}
             ${evento.horario ? `<p><strong>Horário:</strong> ${evento.horario}</p>` : ''}

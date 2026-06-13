@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = '../login/index.html';
   });
 
-  // resto do código...
 
   // Carrega eventos do banco ao abrir a página
   carregarEventos();
@@ -52,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = document.getElementById('event-date').value.trim();
     const local = document.getElementById('event-local').value.trim();
     const descricao = document.getElementById('event-theme').value.trim();
-
+    const imagem_url = document.getElementById('event-imagem').value.trim();
     if (!nome || !data || !local) {
       alert('Preencha pelo menos nome, data e local.');
       return;
@@ -65,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ nome, data, local, descricao })
+        body: JSON.stringify({ nome, data, local, descricao, imagem_url })
       });
 
       const dados = await resposta.json();
@@ -101,6 +100,7 @@ async function carregarEventos() {
 
     container.innerHTML = eventos.map(evento => `
       <div class="card-evento" data-id="${evento.id}">
+        ${evento.imagem_url ? `<img src="${evento.imagem_url}" alt="${evento.nome}" onerror="this.style.display='none'">` : ''}
         <h3>${evento.nome}</h3>
         ${evento.data ? `<p><strong>Data:</strong> ${formatarData(evento.data)}</p>` : ''}
         ${evento.horario ? `<p><strong>Horário:</strong> ${evento.horario}</p>` : ''}

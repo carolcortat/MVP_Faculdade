@@ -27,27 +27,27 @@ router.get('/', (req, res) => {
 
 // POST /api/eventos — só admin
 router.post('/', autenticar, (req, res) => {
-  const { nome, descricao, data, horario, local } = req.body;
+  const { nome, descricao, data, horario, local, imagem_url } = req.body;
   if (!nome || !data) return res.status(400).json({ erro: 'Nome e data são obrigatórios' });
 
   const resultado = db.prepare(
-    'INSERT INTO eventos (nome, descricao, data, horario, local) VALUES (?, ?, ?, ?, ?)'
-  ).run(nome, descricao, data, horario, local);
+    'INSERT INTO eventos (nome, descricao, data, horario, local, imagem_url) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(nome, descricao, data, horario, local, imagem_url);
 
-  res.status(201).json({ id: resultado.lastInsertRowid, nome, descricao, data, horario, local });
+  res.status(201).json({ id: resultado.lastInsertRowid, nome, descricao, data, horario, local, imagem_url });
 });
 
 // PUT /api/eventos/:id — só admin
 router.put('/:id', autenticar, (req, res) => {
-  const { nome, descricao, data, horario, local } = req.body;
+  const { nome, descricao, data, horario, local, imagem_url } = req.body;
   const { id } = req.params;
 
   const evento = db.prepare('SELECT id FROM eventos WHERE id = ?').get(id);
   if (!evento) return res.status(404).json({ erro: 'Evento não encontrado' });
 
   db.prepare(
-    'UPDATE eventos SET nome = ?, descricao = ?, data = ?, horario = ?, local = ? WHERE id = ?'
-  ).run(nome, descricao, data, horario, local, id);
+    'UPDATE eventos SET nome = ?, descricao = ?, data = ?, horario = ?, local = ?, imagem_url = ? WHERE id = ?'
+  ).run(nome, descricao, data, horario, local, imagem_url, id);
 
   res.json({ mensagem: 'Evento atualizado com sucesso' });
 });

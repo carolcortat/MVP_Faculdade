@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <title>Administrador</title>
   <link rel="stylesheet" href="./admin-style.css">
 </head>
+
 <body>
   <header class="cabecalho">
     <a href="../../index.html"><img src="../../assets/images/logo.png" alt="logocircuito" id="logo" /></a>
@@ -60,6 +62,10 @@
           <input type="text" id="event-local" placeholder="Ex: Parque Natural Montanhas" required>
         </div>
         <div class="form-group">
+          <label for="event-imagem">URL da Imagem</label>
+          <input type="url" id="event-imagem" placeholder="Ex: https://site.com/imagem.jpg">
+        </div>
+        <div class="form-group">
           <label for="event-theme">Descrição</label>
           <textarea id="event-theme" placeholder="Descreva o evento..." rows="3"></textarea>
         </div>
@@ -86,4 +92,5 @@
 
   <script src="./admin-script.js"></script>
 </body>
+
 </html>

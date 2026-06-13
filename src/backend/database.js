@@ -36,13 +36,14 @@ db.exec(`
     FOREIGN KEY (parque_id) REFERENCES parques(id) ON DELETE CASCADE
   );
 
-  CREATE TABLE IF NOT EXISTS eventos (
+ CREATE TABLE IF NOT EXISTS eventos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
     descricao TEXT,
     data TEXT NOT NULL,
     horario TEXT,
     local TEXT,
+    imagem_url TEXT,
     criado_em TEXT DEFAULT (datetime('now'))
   );
 `);
