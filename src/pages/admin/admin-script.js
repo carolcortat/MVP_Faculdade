@@ -1,3 +1,12 @@
+const API = 'http://localhost:3000/api';
+
+// Verifica se está logado
+const token = localStorage.getItem('token');
+if (!token) {
+  alert('Acesso negado! Faça login primeiro.');
+  window.location.href = '../login/index.html';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const addBtn = document.getElementById('add-event-btn');
   const cancelBtn = document.getElementById('cancel-add-event-btn');
@@ -5,96 +14,133 @@ document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('modal-overlay');
   const form = document.getElementById('event-form');
 
+  // Logout
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('adminEmail');
+    window.location.href = '../login/index.html';
+  });
+
+  // resto do código...
+
+  // Carrega eventos do banco ao abrir a página
+  carregarEventos();
+
   // Abre o modal
   addBtn.addEventListener('click', () => {
     overlay.classList.add('ativo');
   });
 
-  // Fecha o modal (botão X ou cancelar)
+  // Fecha o modal
   function fecharModal() {
     overlay.classList.remove('ativo');
+    form.reset();
   }
 
   cancelBtn.addEventListener('click', fecharModal);
   cancelFormBtn.addEventListener('click', fecharModal);
 
-  // Fecha clicando fora do modal
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) fecharModal();
   });
 
   // Submete o formulário
-  form.addEventListener('submit', function (e) {
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const titulo = document.getElementById('event-title').value.trim();
+    const nome = document.getElementById('event-title').value.trim();
     const data = document.getElementById('event-date').value.trim();
     const local = document.getElementById('event-local').value.trim();
-    const tema = document.getElementById('event-theme').value.trim();
-    const imagemInput = document.getElementById('event-image');
-    const imagemFile = imagemInput.files[0];
+    const descricao = document.getElementById('event-theme').value.trim();
 
-    if (!titulo || !data || !local || !tema || !imagemFile) {
-      alert("Preencha todos os campos corretamente.");
+    if (!nome || !data || !local) {
+      alert('Preencha pelo menos nome, data e local.');
       return;
     }
 
-    criarCardEvento(titulo, data, local, tema, imagemFile);
-    form.reset();
-    fecharModal();
-    alert("Evento cadastrado! ⚠️ Sem banco de dados, ao recarregar a página o evento será removido.");
-  });
+    try {
+      const resposta = await fetch(`${API}/eventos`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ nome, data, local, descricao })
+      });
 
-  // Adiciona botão excluir nos cards fixos
-  adicionarBotaoExcluirEmTodosOsCards();
+      const dados = await resposta.json();
+
+      if (!resposta.ok) {
+        alert(dados.erro || 'Erro ao cadastrar evento.');
+        return;
+      }
+
+      alert('Evento cadastrado com sucesso!');
+      fecharModal();
+      carregarEventos();
+
+    } catch (erro) {
+      alert('Erro ao conectar com o servidor.');
+      console.error(erro);
+    }
+  });
 });
 
-function criarCardEvento(titulo, data, local, tema, imagemFile) {
-  const card = document.createElement('div');
-  card.classList.add('card-evento');
+async function carregarEventos() {
+  const container = document.querySelector('.container-cards-eventos');
+  container.innerHTML = '<p>Carregando eventos...</p>';
 
-  const img = document.createElement('img');
-  img.src = URL.createObjectURL(imagemFile);
-  img.alt = titulo;
-  img.onerror = () => { alert("Não foi possível carregar a imagem."); img.remove(); };
+  try {
+    const resposta = await fetch(`${API}/eventos`);
+    const eventos = await resposta.json();
 
-  const h3 = document.createElement('h3');
-  h3.textContent = titulo;
+    if (eventos.length === 0) {
+      container.innerHTML = '<p>Nenhum evento cadastrado ainda.</p>';
+      return;
+    }
 
-  const pData = document.createElement('p');
-  pData.innerHTML = `<strong>Data:</strong> ${data}`;
+    container.innerHTML = eventos.map(evento => `
+      <div class="card-evento" data-id="${evento.id}">
+        <h3>${evento.nome}</h3>
+        ${evento.data ? `<p><strong>Data:</strong> ${formatarData(evento.data)}</p>` : ''}
+        ${evento.horario ? `<p><strong>Horário:</strong> ${evento.horario}</p>` : ''}
+        ${evento.local ? `<p><strong>Local:</strong> ${evento.local}</p>` : ''}
+        ${evento.descricao ? `<p><strong>Descrição:</strong> ${evento.descricao}</p>` : ''}
+        <button class="delete-btn" onclick="excluirEvento(${evento.id})">Excluir</button>
+      </div>
+    `).join('');
 
-  const pLocal = document.createElement('p');
-  pLocal.innerHTML = `<strong>Local:</strong> ${local}`;
-
-  const pTema = document.createElement('p');
-  pTema.innerHTML = `<strong>Tema:</strong> ${tema}`;
-
-  const deleteBtn = criarBotaoExcluir(card, true);
-
-  card.append(img, h3, pData, pLocal, pTema, deleteBtn);
-  document.querySelector('.container-cards-eventos').appendChild(card);
+  } catch (erro) {
+    container.innerHTML = '<p>Erro ao carregar eventos.</p>';
+    console.error(erro);
+  }
 }
 
-function criarBotaoExcluir(card, isNovo = false) {
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = 'Excluir';
-  deleteBtn.classList.add('delete-btn');
-  deleteBtn.addEventListener('click', () => {
-    if (confirm("Deseja realmente excluir este evento?")) {
-      if (!isNovo) {
-        alert('Evento removido da tela. Ao recarregar, reaparecerá pois está fixo no HTML.');
-      }
-      card.remove();
+async function excluirEvento(id) {
+  if (!confirm('Deseja realmente excluir este evento?')) return;
+
+  try {
+    const resposta = await fetch(`${API}/eventos/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      alert(dados.erro || 'Erro ao excluir evento.');
+      return;
     }
-  });
-  return deleteBtn;
+
+    carregarEventos();
+
+  } catch (erro) {
+    alert('Erro ao conectar com o servidor.');
+    console.error(erro);
+  }
 }
 
-function adicionarBotaoExcluirEmTodosOsCards() {
-  document.querySelectorAll('.card-evento').forEach(card => {
-    if (!card.querySelector('.delete-btn')) {
-      card.appendChild(criarBotaoExcluir(card, false));
-    }
-  });
+function formatarData(data) {
+  const [ano, mes, dia] = data.split('-');
+  return `${dia}/${mes}/${ano}`;
 }

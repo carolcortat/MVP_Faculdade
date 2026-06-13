@@ -24,59 +24,57 @@
             </ul>
         </nav>
     </header>
-      <section class="secao-eventos">
-        <h2 class="titulo-eventos">Eventos</h2>
-        <div class="container-cards-eventos">
-        <div class="card-evento">
-            <img src="../../assets/images/fotos-parques/festival mata atlantica.jpeg" alt="Festival da Mata Atlântica">
-            <h3>Festival da Mata Atlântica</h3>
-            <p><strong>Data:</strong> Maio (Mês da Mata Atlântica)</p>
-            <p><strong>Local:</strong> Parque Natural Montanhas de Teresópolis</p>
-            <p><strong>Tema:</strong> Valorizar a biodiversidade e os povos que cuidam da floresta</p>
-        </div>
-        <div class="card-evento">
-            <img src="../../assets/images/fotos-parques/campo-flores.avif" alt="Semana da Montanha">
-            <h3>Semana da Montanha & Natureza Viva</h3>
-            <p><strong>Data:</strong> 7 a 13 de setembro de 2025</p>
-            <p><strong>Local:</strong> PARNASO + áreas de apoio no centro</p>
-            <p><strong>Tema:</strong> Montanhismo, ecoturismo e preservação ambiental</p>
-        </div>
-        <div class="card-evento">
-            <img src="../../assets/images/fotos-parques/noite-estrelada.avif" alt="Noite nas Estrelas">
-            <h3>Noite nas Estrelas</h3>
-            <p><strong>Data sugerida:</strong> Sábado de lua nova</p>
-            <p><strong>Local:</strong> Gramado do PARNASO (Teresópolis)</p>
-            <p><strong>Tema:</strong> Astronomia e conexão com a natureza noturna</p>
-        </div>
-        <div class="card-evento">
-            <img src="../../assets/images/fotos-parques/foto-teatro.jpg" alt="Teatro-em-cena">
-            <h3>Teatro na Floresta – Natureza Encena</h3>
-            <p><strong>Data sugerida:</strong>Fins de semana alternados (projeto contínuo)</p>
-            <p><strong>Local:</strong>Clareiras e espaços abertos nos parques</p>
-            <p><strong>Tema:</strong>O Monstro da floresta</p>
-        </div>
-        <div class="card-evento">
-            <img src="../../assets/images/fotos-parques/escalada-vertical.jpg" alt="Escalada">
-            <h3>Desafio Vertical – Mini Festival de Escalada e Aventura</h3>
-            <p><strong>Data sugerida:</strong> 05 de agosto</p>
-            <p><strong>Local:</strong>Áreas de escalada no parque(Pedra do sino)</p>
-            <p><strong>Tema:</strong>Desafios da pedra do sino</p>
-        </div>
-        <div class="card-evento">
-            <img src="../../assets/images/fotos-parques/cachorrinho.webp" alt="PetDay">
-            <h3>PetDay na Natureza – Traga Seu Amigo de 4 Patas!</h3>
-            <p><strong>Data sugerida:</strong>Sábado:10 de setembro</p>
-            <p><strong>Local:</strong>Trilha suspensa e área gramada do PARNASO</p>
-            <p><strong>Tema:</strong>Caminhada, Cuidado e Amor: Celebrando a Vida ao Ar Livre com Pets</p>
-        </div>
-        </div>
-</section>
-<footer class="contato">
-  <h1>Contate - nos</h1>
-  <p>Telefone:4002 - 8922</p>
-  <p>Instagram:@Circuitotereverde</p>
-  <p>Whatsapp:4002 - 8922</p>
-  <p class="rodape">&copy; 2025 Circuito Terê Verde. Todos os direitos reservados.</p>
-</footer>
+
+  <section class="secao-eventos">
+    <h2 class="titulo-eventos">Eventos</h2>
+    <div class="container-cards-eventos" id="container-eventos">
+      <p class="carregando">Carregando eventos...</p>
+    </div>
+  </section>
+
+  <footer class="contato">
+    <h1>Contate - nos</h1>
+    <p>Telefone:4002 - 8922</p>
+    <p>Instagram:@Circuitotereverde</p>
+    <p>Whatsapp:4002 - 8922</p>
+    <p class="rodape">&copy; 2025 Circuito Terê Verde. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    async function carregarEventos() {
+      const container = document.getElementById('container-eventos');
+
+      try {
+        const resposta = await fetch('http://localhost:3000/api/eventos');
+        const eventos = await resposta.json();
+
+        if (eventos.length === 0) {
+          container.innerHTML = '<p class="sem-eventos">Nenhum evento cadastrado no momento.</p>';
+          return;
+        }
+
+        container.innerHTML = eventos.map(evento => `
+          <div class="card-evento">
+            <h3>${evento.nome}</h3>
+            ${evento.data ? `<p><strong>Data:</strong> ${formatarData(evento.data)}</p>` : ''}
+            ${evento.horario ? `<p><strong>Horário:</strong> ${evento.horario}</p>` : ''}
+            ${evento.local ? `<p><strong>Local:</strong> ${evento.local}</p>` : ''}
+            ${evento.descricao ? `<p><strong>Descrição:</strong> ${evento.descricao}</p>` : ''}
+          </div>
+        `).join('');
+
+      } catch (erro) {
+        container.innerHTML = '<p class="sem-eventos">Erro ao carregar eventos. Verifique se o servidor está rodando.</p>';
+        console.error('Erro:', erro);
+      }
+    }
+
+    function formatarData(data) {
+      const [ano, mes, dia] = data.split('-');
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    carregarEventos();
+  </script>
 </body>
 </html>

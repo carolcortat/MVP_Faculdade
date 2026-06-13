@@ -315,3 +315,37 @@ footer.contato p { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 2
   #event-form-container { padding: 28px 24px; margin: 16px; }
   .form-row { grid-template-columns: 1fr; }
 }
+
+/* BOTÃO SAIR */
+.btn-logout {
+  background: transparent;
+  color: var(--vermelho);
+  border: 1.5px solid var(--vermelho);
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-left: 12px;
+}
+
+.btn-logout:hover {
+  background: var(--vermelho);
+  color: var(--branco);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(192,57,43,0.3);
+}
+
+.admin-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#admin-email {
+  font-size: 14px;
+  color: var(--verde-medio);
+  font-weight: 500;
+}

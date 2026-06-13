@@ -25,13 +25,17 @@
     </nav>
   </header>
 
-  <!-- Barra do admin com badge e botão -->
+  <!-- Barra do admin -->
   <div class="admin-toolbar">
-    <div class="admin-badge">Página do Administrador</div>
-    <button id="add-event-btn">Cadastrar Novo Evento</button>
+    <div class="admin-badge"> Página do Administrador</div>
+    <div class="admin-toolbar-actions">
+      <span id="admin-email"></span>
+      <button id="add-event-btn"> Cadastrar Novo Evento</button>
+      <button id="logout-btn" class="btn-logout">Sair</button>
+    </div>
   </div>
 
-  <!-- Overlay com modal do formulário -->
+  <!-- Modal do formulário -->
   <div class="modal-overlay" id="modal-overlay">
     <div id="event-form-container">
       <button class="btn-fechar-modal" id="cancel-add-event-btn" title="Fechar">✕</button>
@@ -47,17 +51,17 @@
             <input type="date" id="event-date" required>
           </div>
           <div class="form-group">
-            <label for="event-local">Local</label>
-            <input type="text" id="event-local" placeholder="Parque Natural Montanhas" required>
+            <label for="event-horario">Horário</label>
+            <input type="time" id="event-horario">
           </div>
         </div>
         <div class="form-group">
-          <label for="event-theme">Tema</label>
-          <input type="text" id="event-theme" placeholder="Descreva o tema do evento" required>
+          <label for="event-local">Local</label>
+          <input type="text" id="event-local" placeholder="Ex: Parque Natural Montanhas" required>
         </div>
         <div class="form-group">
-          <label for="event-image">Imagem do evento</label>
-          <input type="file" id="event-image" accept="image/*" required>
+          <label for="event-theme">Descrição</label>
+          <textarea id="event-theme" placeholder="Descreva o evento..." rows="3"></textarea>
         </div>
         <div class="form-actions">
           <button type="submit" class="btn-salvar">Salvar Evento</button>
@@ -69,50 +73,7 @@
 
   <section class="secao-eventos">
     <h2 class="titulo-eventos">Eventos</h2>
-    <div class="container-cards-eventos">
-      <div class="card-evento">
-        <img src="../../assets/images/fotos-parques/festival mata atlantica.jpeg" alt="Festival da Mata Atlântica">
-        <h3>Festival da Mata Atlântica</h3>
-        <p><strong>Data:</strong> Maio (Mês da Mata Atlântica)</p>
-        <p><strong>Local:</strong> Parque Natural Montanhas de Teresópolis</p>
-        <p><strong>Tema:</strong> Valorizar a biodiversidade e os povos que cuidam da floresta</p>
-      </div>
-      <div class="card-evento">
-        <img src="../../assets/images/fotos-parques/campo-flores.avif" alt="Semana da Montanha">
-        <h3>Semana da Montanha & Natureza Viva</h3>
-        <p><strong>Data:</strong> 7 a 13 de setembro de 2025</p>
-        <p><strong>Local:</strong> PARNASO + áreas de apoio no centro</p>
-        <p><strong>Tema:</strong> Montanhismo, ecoturismo e preservação ambiental</p>
-      </div>
-      <div class="card-evento">
-        <img src="../../assets/images/fotos-parques/noite-estrelada.avif" alt="Noite nas Estrelas">
-        <h3>Noite nas Estrelas</h3>
-        <p><strong>Data:</strong> Sábado de lua nova</p>
-        <p><strong>Local:</strong> Gramado do PARNASO (Teresópolis)</p>
-        <p><strong>Tema:</strong> Astronomia e conexão com a natureza noturna</p>
-      </div>
-      <div class="card-evento">
-        <img src="../../assets/images/fotos-parques/foto-teatro.jpg" alt="Teatro na Floresta">
-        <h3>Teatro na Floresta – Natureza Encena</h3>
-        <p><strong>Data:</strong> Fins de semana alternados (projeto contínuo)</p>
-        <p><strong>Local:</strong> Clareiras e espaços abertos nos parques</p>
-        <p><strong>Tema:</strong> O Monstro da floresta</p>
-      </div>
-      <div class="card-evento">
-        <img src="../../assets/images/fotos-parques/escalada-vertical.jpg" alt="Desafio Vertical">
-        <h3>Desafio Vertical – Mini Festival de Escalada e Aventura</h3>
-        <p><strong>Data:</strong> 05 de agosto</p>
-        <p><strong>Local:</strong> Áreas de escalada no parque (Pedra do sino)</p>
-        <p><strong>Tema:</strong> Desafios da pedra do sino</p>
-      </div>
-      <div class="card-evento">
-        <img src="../../assets/images/fotos-parques/cachorrinho.webp" alt="PetDay na Natureza">
-        <h3>PetDay na Natureza – Traga Seu Amigo de 4 Patas!</h3>
-        <p><strong>Data:</strong> Sábado: 10 de setembro</p>
-        <p><strong>Local:</strong> Trilha suspensa e área gramada do PARNASO</p>
-        <p><strong>Tema:</strong> Caminhada, Cuidado e Amor: Celebrando a Vida ao Ar Livre com Pets</p>
-      </div>
-    </div>
+    <div class="container-cards-eventos"></div>
   </section>
 
   <footer class="contato">
