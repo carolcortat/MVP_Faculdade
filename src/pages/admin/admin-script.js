@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const nome = document.getElementById('event-title').value.trim();
     const data = document.getElementById('event-date').value.trim();
+    const horario = document.getElementById('event-horario').value.trim();
     const local = document.getElementById('event-local').value.trim();
     const descricao = document.getElementById('event-theme').value.trim();
     const imagem_url = document.getElementById('event-imagem').value.trim();
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ nome, data, local, descricao, imagem_url })
+        body: JSON.stringify({ nome, data, horario, local, descricao, imagem_url })
       });
 
       const dados = await resposta.json();
